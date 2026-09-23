@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Guru - Buku Penghubung JSIT Digital</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN untuk Grafik -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            jsit: {
+              green: '#1B5E20',
+              teal: '#004D40',
+              light: '#E8F5E9',
+              accent: '#2E7D32'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-100 font-sans antialiased text-gray-800">
+
+  <!-- Sidebar & Main Layout -->
+  <div class="min-h-screen flex flex-col md:flex-row">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-full md:w-64 bg-jsit-teal text-white flex-shrink-0">
+      <div class="p-5 border-b border-teal-700 flex items-center space-x-3">
+        <div class="w-10 h-10 bg-white text-jsit-teal rounded-full flex items-center justify-center font-bold text-lg shadow">
+          JSIT
+        </div>
+        <div>
+          <h1 class="font-bold text-sm leading-tight">SIT Mutiara Ilmu</h1>
+          <p class="text-xs text-teal-200">Portal Guru & Wali Kelas</p>
+        </div>
+      </div>
+
+      <nav class="p-4 space-y-1.5 text-sm font-medium">
+        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-jsit-green text-white shadow">
+          <span>📊</span>
+          <span>Dashboard Kelas</span>
+        </a>
+        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-teal-100 hover:bg-teal-800 transition">
+          <span>🕌</span>
+          <span>Mutaba'ah Yaumiyah</span>
+        </a>
+        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-teal-100 hover:bg-teal-800 transition">
+          <span>📖</span>
+          <span>Tahfiz & Muraja'ah</span>
+        </a>
+        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-teal-100 hover:bg-teal-800 transition">
+          <span>💬</span>
+          <span>Catatan Ortu</span>
+          <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">3</span>
+        </a>
+        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-teal-100 hover:bg-teal-800 transition">
+          <span>📈</span>
+          <span>Laporan Bulanan</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col min-w-0">
+
+      <!-- Top Header Bar -->
+      <header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-sm">
+        <div>
+          <h2 class="text-xl font-bold text-gray-800">Dashboard Kelas 4 Al-Khawarizmi</h2>
+          <p class="text-xs text-gray-500">Wali Kelas: <strong class="text-gray-700">Ustadz Ali, S.Pd.I</strong> | Tanggal: <span id="current-date" class="font-semibold text-jsit-green">-- / -- / ----</span></p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="relative">
+            <span class="absolute text-gray-400 left-3 top-2.5">🔍</span>
+            <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Cari nama siswa..." class="pl-9 pr-4 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-jsit-green focus:outline-none w-48 md:w-64">
+          </div>
+          <div class="flex items-center space-x-2 border-l pl-4">
+            <div class="w-9 h-9 bg-jsit-green text-white rounded-full flex items-center justify-center font-bold text-sm">
+              UA
+            </div>
+            <span class="text-sm font-semibold hidden md:inline">Ust. Ali</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content Section -->
+      <main class="p-6 space-y-6 overflow-y-auto">
+
+        <!-- Stat Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Card 1 -->
+          <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs text-gray-500 font-medium">Pengisian Hari Ini</p>
+              <h3 class="text-2xl font-bold text-gray-800 mt-1">24 <span class="text-sm font-normal text-gray-500">/ 28 Siswa</span></h3>
+              <p class="text-xs text-green-600 font-semibold mt-1">85% Sudah Mengisi</p>
+            </div>
+            <div class="w-12 h-12 bg-green-50 text-jsit-green rounded-xl flex items-center justify-center text-2xl">
+              ✅
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs text-gray-500 font-medium">Shalat Subuh Masjid</p>
+              <h3 class="text-2xl font-bold text-gray-800 mt-1">18 <span class="text-sm font-normal text-gray-500">Siswa</span></h3>
+              <p class="text-xs text-blue-600 font-semibold mt-1">75% Berjamaah</p>
+            </div>
+            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-2xl">
+              🕌
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs text-gray-500 font-medium">Ziyadah Minggu Ini</p>
+              <h3 class="text-2xl font-bold text-gray-800 mt-1">22 <span class="text-sm font-normal text-gray-500">Siswa</span></h3>
+              <p class="text-xs text-purple-600 font-semibold mt-1">Tuntas Target</p>
+            </div>
+            <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-2xl">
+              📖
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs text-gray-500 font-medium">Catatan Orang Tua</p>
+              <h3 class="text-2xl font-bold text-gray-800 mt-1">3 <span class="text-sm font-normal text-gray-500">Pesan</span></h3>
+              <p class="text-xs text-amber-600 font-semibold mt-1">Perlu Tanggapan</p>
+            </div>
+            <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-2xl">
+              💬
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart Section & Quick Info -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Main Chart -->
+          <div class="lg:col-span-2 bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="font-bold text-gray-800 text-sm">Grafik Kedisiplinan Ibadah Kelas (Minggu Ini)</h3>
+              <span class="text-xs bg-jsit-light text-jsit-green px-2.5 py-1 rounded-full font-medium">Real-time</span>
+            </div>
+            <div class="h-64">
+              <canvas id="ibadahChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Status Ringkasan -->
+          <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <h3 class="font-bold text-gray-800 text-sm mb-3">Tindakan Cepat</h3>
+              <div class="space-y-3">
+                <button onclick="sendReminderAll()" class="w-full bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 text-xs font-semibold py-3 px-4 rounded-lg text-left flex items-center justify-between transition">
+                  <span>📩 Kirim Pengingat WA (4 Belum Mengisi)</span>
+                  <span>➔</span>
+                </button>
+                <button class="w-full bg-green-50 hover:bg-green-100 border border-green-200 text-jsit-green text-xs font-semibold py-3 px-4 rounded-lg text-left flex items-center justify-between transition">
+                  <span>📊 Cetak Rekap Mutaba'ah Bulanan</span>
+                  <span>➔</span>
+                </button>
+                <button class="w-full bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-800 text-xs font-semibold py-3 px-4 rounded-lg text-left flex items-center justify-between transition">
+                  <span>⭐ Berikan Apresiasi / Badge Kelas</span>
+                  <span>➔</span>
+                </button>
+              </div>
+            </div>
+            <div class="mt-4 pt-3 border-t text-xs text-gray-500">
+              *Pengingat WA otomatis dikirim oleh bot setiap pukul 19.30 WITA.
+            </div>
+          </div>
+        </div>
+
+        <!-- Table Data Siswa -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div class="p-5 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div>
+              <h3 class="font-bold text-gray-800 text-base">Status Mutaba'ah Harian Siswa</h3>
+              <p class="text-xs text-gray-500">Daftar presensi ibadah harian & catatan orang tua</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <select id="statusFilter" onchange="filterTable()" class="border text-xs rounded-lg p-2 bg-gray-50 focus:ring-jsit-green">
+                <option value="all">Semua Status</option>
+                <option value="sudah">Sudah Mengisi</option>
+                <option value="belum">Belum Mengisi</option>
+              </select>
+              <button class="bg-jsit-green hover:bg-green-900 text-white text-xs font-bold py-2 px-3 rounded-lg shadow transition flex items-center gap-1">
+                <span>📥</span> Export Excel
+              </button>
+            </div>
+          </div>
+
+          <!-- Table Content -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-gray-600" id="studentTable">
+              <thead class="bg-gray-50 text-gray-700 font-semibold border-b">
+                <tr>
+                  <th class="p-3.5">No</th>
+                  <th class="p-3.5">Nama Siswa</th>
+                  <th class="p-3.5">Shalat Subuh</th>
+                  <th class="p-3.5">Tilawah</th>
+                  <th class="p-3.5">Shalat Dhuha</th>
+                  <th class="p-3.5">Catatan Ortu</th>
+                  <th class="p-3.5">Status</th>
+                  <th class="p-3.5 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <!-- Row 1 -->
+                <tr class="hover:bg-gray-50 student-row" data-status="sudah">
+                  <td class="p-3.5 font-medium">1</td>
+                  <td class="p-3.5 font-bold text-gray-800">Ahmad Faris</td>
+                  <td class="p-3.5"><span class="bg-green-100 text-green-800 px-2 py-0.5 rounded">Berjamaah Masjid</span></td>
+                  <td class="p-3.5">Juz 5 (2 Hal)</td>
+                  <td class="p-3.5">4 Rakaat</td>
+                  <td class="p-3.5 italic text-gray-500 max-w-xs truncate">"Faris membantu merapikan tempat tidur sendiri..."</td>
+                  <td class="p-3.5"><span class="bg-green-100 text-green-800 font-semibold px-2.5 py-1 rounded-full text-[10px]">Sudah Mengisi</span></td>
+                  <td class="p-3.5 text-center">
+                    <button onclick="openDetail('Ahmad Faris', 'Berjamaah Masjid', 'Juz 5 (2 Halaman)', 'Ya (4 Rakaat)', 'Faris membantu merapikan tempat tidur sendiri dengan rajin.')" class="bg-jsit-light text-jsit-green hover:bg-green-200 font-bold px-2.5 py-1 rounded text-xs transition">
+                      Detail
+                    </button>
+                  </td>
+                </tr>
+
+                <!-- Row 2 -->
+                <tr class="hover:bg-gray-50 student-row" data-status="sudah">
+                  <td class="p-3.5 font-medium">2</td>
+                  <td class="p-3.5 font-bold text-gray-800">Aisyah Humaira</td>
+                  <td class="p-3.5"><span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Berjamaah Rumah</span></td>
+                  <td class="p-3.5">Juz 1 (1 Hal)</td>
+                  <td class="p-3.5">2 Rakaat</td>
+                  <td class="p-3.5 text-gray-400">-</td>
+                  <td class="p-3.5"><span class="bg-green-100 text-green-800 font-semibold px-2.5 py-1 rounded-full text-[10px]">Sudah Mengisi</span></td>
+                  <td class="p-3.5 text-center">
+                    <button onclick="openDetail('Aisyah Humaira', 'Berjamaah Rumah', 'Juz 1 (1 Halaman)', 'Ya (2 Rakaat)', '-')" class="bg-jsit-light text-jsit-green hover:bg-green-200 font-bold px-2.5 py-1 rounded text-xs transition">
+                      Detail
+                    </button>
+                  </td>
+                </tr>
+
+                <!-- Row 3 -->
+                <tr class="hover:bg-gray-50 student-row" data-status="belum">
+                  <td class="p-3.5 font-medium">3</td>
+                  <td class="p-3.5 font-bold text-gray-800">Muhammad Bil-Izzah</td>
+                  <td class="p-3.5 text-gray-400">-</td>
+                  <td class="p-3.5 text-gray-400">-</td>
+                  <td class="p-3.5 text-gray-400">-</td>
+                  <td class="p-3.5 text-gray-400">-</td>
+                  <td class="p-3.5"><span class="bg-red-100 text-red-800 font-semibold px-2.5 py-1 rounded-full text-[10px]">Belum Mengisi</span></td>
+                  <td class="p-3.5 text-center">
+                    <button onclick="sendWAReminder('Muhammad Bil-Izzah')" class="bg-amber-100 text-amber-800 hover:bg-amber-200 font-bold px-2.5 py-1 rounded text-xs transition">
+                      Ingatkan WA
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal Detail & Verifikasi -->
+  <div id="detailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-xl max-w-md w-full p-6 space-y-4 shadow-xl">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="font-bold text-gray-800 text-base" id="modalStudentName">Detail Mutaba'ah</h3>
+        <button onclick="closeDetail()" class="text-gray-400 hover:text-gray-600 font-bold">✕</button>
+      </div>
+      
+      <div class="space-y-2 text-xs">
+        <div class="flex justify-between p-2 bg-gray-50 rounded">
+          <span class="text-gray-500">Shalat Subuh:</span>
+          <span id="modalSubuh" class="font-bold text-gray-800">-</span>
+        </div>
+        <div class="flex justify-between p-2 bg-gray-50 rounded">
+          <span class="text-gray-500">Tilawah:</span>
+          <span id="modalTilawah" class="font-bold text-gray-800">-</span>
+        </div>
+        <div class="flex justify-between p-2 bg-gray-50 rounded">
+          <span class="text-gray-500">Shalat Dhuha:</span>
+          <span id="modalDhuha" class="font-bold text-gray-800">-</span>
+        </div>
+        <div class="p-2 bg-amber-50 rounded border border-amber-100">
+          <span class="text-amber-800 font-semibold block mb-1">Catatan Orang Tua:</span>
+          <p id="modalOrtuNote" class="text-gray-700 italic">-</p>
+        </div>
+      </div>
+
+      <!-- Respon Guru -->
+      <div class="space-y-1.5 pt-2">
+        <label class="block text-xs font-semibold text-gray-700">Tanggapan / Apresiasi Guru (Opsional):</label>
+        <textarea id="teacherResponse" rows="2" placeholder="Tuliskan apresiasi untuk Ananda/Orang tua..." class="w-full border rounded-lg p-2 text-xs focus:ring-jsit-green focus:border-jsit-green"></textarea>
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button onclick="saveVerification()" class="w-full bg-jsit-green text-white font-bold py-2 rounded-lg text-xs hover:bg-green-900 transition">
+          Verifikasi & Kirim Apresiasi
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 1. Set Tanggal Hari Ini
+    document.addEventListener("DOMContentLoaded", () => {
+      const today = new Date();
+      const options = { day: 'numeric', month: 'long', year: 'numeric' };
+      document.getElementById('current-date').innerText = today.toLocaleDateString('id-ID', options);
+
+      // Render Grafik Chart.js
+      renderChart();
+    });
+
+    // 2. Filter Tabel Berdasarkan Search & Status Dropdown
+    function filterTable() {
+      const searchValue = document.getElementById('searchInput').value.toLowerCase();
+      const statusValue = document.getElementById('statusFilter').value;
+      const rows = document.querySelectorAll('.student-row');
+
+      rows.forEach(row => {
+        const studentName = row.children[1].innerText.toLowerCase();
+        const rowStatus = row.getAttribute('data-status');
+
+        const matchesSearch = studentName.includes(searchValue);
+        const matchesStatus = (statusValue === 'all') || (rowStatus === statusValue);
+
+        if (matchesSearch && matchesStatus) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    // 3. Modal Functions
+    function openDetail(name, subuh, tilawah, dhuha, note) {
+      document.getElementById('modalStudentName').innerText = "Mutaba'ah - " + name;
+      document.getElementById('modalSubuh').innerText = subuh;
+      document.getElementById('modalTilawah').innerText = tilawah;
+      document.getElementById('modalDhuha').innerText = dhuha;
+      document.getElementById('modalOrtuNote').innerText = note;
+      document.getElementById('detailModal').classList.remove('hidden');
+    }
+
+    function closeDetail() {
+      document.getElementById('detailModal').classList.add('hidden');
+    }
+
+    function saveVerification() {
+      alert("Mutaba'ah berhasil diverifikasi & apresiasi telah dikirim ke WhatsApp Orang Tua!");
+      closeDetail();
+    }
+
+    function sendWAReminder(studentName) {
+      alert("Pesan pengingat otomatis telah dikirimkan ke WhatsApp Orang Tua " + studentName);
+    }
+
+    function sendReminderAll() {
+      alert("Pengingat WhatsApp massal berhasil dikirimkan ke 4 orang tua siswa yang belum mengisi hari ini.");
+    }
+
+    // 4. Inisialisasi Chart.js
+    function renderChart() {
+      const ctx = document.getElementById('ibadahChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Ahad'],
+          datasets: [
+            {
+              label: 'Shalat Subuh Masjid (%)',
+              data: [80, 85, 75, 90, 88, 70, 75],
+              backgroundColor: '#1B5E20'
+            },
+            {
+              label: 'Tilawah Harian (%)',
+              data: [70, 75, 80, 85, 90, 65, 70],
+              backgroundColor: '#2E7D32'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100
+            }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
