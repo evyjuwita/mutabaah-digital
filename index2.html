@@ -1,0 +1,69 @@
+-- 1. Tabel Roles
+CREATE TABLE roles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    role_name VARCHAR(20) NOT NULL,
+    description VARCHAR(100)
+);
+
+-- Insert Default Roles
+INSERT INTO roles (role_name, description) VALUES 
+('admin', 'Administrator Sekolah'),
+('teacher', 'Guru / Wali Kelas / Pembina Halaqah'),
+('parent', 'Orang Tua / Wali Murid');
+
+-- 2. Tabel Users
+CREATE TABLE users (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    role_id INT NOT NULL,
+    full_name VARCHAR(100) NOT NULL,
+    phone_number VARCHAR(20) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    password_hash VARCHAR(255),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (role_id) REFERENCES roles(id)
+);
+
+-- 3. Tabel Academic Years
+CREATE TABLE academic_years (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    year_name VARCHAR(20) NOT NULL,
+    semester ENUM('1', '2') NOT NULL,
+    is_current BOOLEAN DEFAULT FALSE
+);
+
+-- 4. Tabel Classes
+CREATE TABLE classes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    academic_year_id INT NOT NULL,
+    class_name VARCHAR(50) NOT NULL,
+    grade_level INT NOT NULL,
+    homeroom_teacher_id BIGINT,
+    FOREIGN KEY (academic_year_id) REFERENCES academic_years(id),
+    FOREIGN KEY (homeroom_teacher_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- 5. Tabel Students
+CREATE TABLE students (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nis VARCHAR(20) UNIQUE NOT NULL,
+    nisn VARCHAR(20) UNIQUE,
+    full_name VARCHAR(100) NOT NULL,
+    gender ENUM('L', 'P') NOT NULL,
+    parent_id BIGINT NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (parent_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 6. Tabel Student Class History
+CREATE TABLE student_class_history (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    student_id BIGINT NOT NULL,
+    class_id INT NOT NULL,
+    academic_year_id INT NOT NULL,
+    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+    FOREIGN KEY (class_id) REFERENCES classes(id),
+    FOREIGN KEY (academic_year_id) REFERENCES academic_years(id)
+);
